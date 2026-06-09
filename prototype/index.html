@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Beasiswa Terpusat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .nav-link {
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #2563eb;
+        }
+        .nav-active {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        /* Clean Card Shadows */
+        .card-clean {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            transition: all 0.2s ease;
+        }
+        .card-clean:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            border-color: #cbd5e1;
+        }
+
+        /* Status Badges based on ERD enum: pending, processing, accepted, rejected */
+        .badge { padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+        .badge-pending { background: #f1f5f9; color: #475569; }
+        .badge-processing { background: #fef3c7; color: #b45309; }
+        .badge-accepted { background: #dcfce7; color: #15803d; }
+        .badge-rejected { background: #fee2e2; color: #b91c1c; }
+
+        /* Page Routing Animation */
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .page.active {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-100 selection:text-brand-900">
+
+    <!-- Header Navigation -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2 cursor-pointer" onclick="showPage('home')">
+                    <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white">
+                        <i class="ph-bold ph-graduation-cap text-xl"></i>
+                    </div>
+                    <span class="text-lg font-bold tracking-tight text-slate-900">
+                        Portal Beasiswa
+                    </span>
+                </div>
+                
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+                    <a href="#" onclick="showPage('home'); return false;" class="nav-link nav-active" data-nav="home">Beranda</a>
+                    <a href="#" onclick="showPage('search'); return false;" class="nav-link" data-nav="search">Cari Beasiswa</a>
+                    <a href="#" onclick="showPage('dashboard'); return false;" class="nav-link" data-nav="dashboard">Dashboard Mahasiswa</a>
+                    <span class="w-px h-4 bg-slate-300"></span>
+                    <a href="#" onclick="showPage('admin'); return false;" class="nav-link flex items-center gap-1 text-slate-500" data-nav="admin">
+                        <i class="ph ph-lock-key"></i> Panel Admin
+                    </a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-4 text-sm">
+                    <button class="hidden md:block font-semibold text-slate-600 hover:text-brand-600 transition-colors">Masuk</button>
+                    <button class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">Daftar Akun</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="min-h-[calc(100vh-4rem)]">
+        
+        <!-- ================= HOME PAGE ================= -->
+        <section id="home" class="page active">
+            <!-- Hero Section (Asymmetric Split) -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+                <div class="grid md:grid-cols-2 gap-12 lg:gap-8 items-center">
+                    <div class="max-w-xl">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-xs font-bold tracking-wide mb-6 uppercase">
+                            <span class="w-2 h-2 rounded-full bg-brand-600"></span>
+                            Rilis MVP v1.0
+                        </div>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.1] mb-6">
+                            Satu portal untuk semua peluang beasiswamu.
+                        </h1>
+                        <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                            Cari beasiswa yang sesuai dengan IPK dan jurusanmu, daftar ke situs penyedia, dan catat progres seleksinya di satu dashboard terpusat secara transparan.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button onclick="showPage('search')" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all">
+                                Cari Beasiswa <i class="ph-bold ph-arrow-right"></i>
+                            </button>
+                            <button class="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 px-6 py-3.5 rounded-xl font-bold transition-all">
+                                Pelajari Fitur
+                            </button>
+                        </div>
+                    </div>
+                    <div class="relative hidden md:block">
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80" alt="Mahasiswa sedang berdiskusi" class="rounded-2xl shadow-xl aspect-[4/3] object-cover">
+                        <!-- Decorative element to break the boxiness -->
+                        <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg border border-slate-100 flex items-center gap-4">
+                            <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xl">
+                                <i class="ph-fill ph-check-circle"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900">Validasi Data</p>
+                                <p class="text-xs text-slate-500">Akurasi berkas terjamin</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Bento -->
+            <div class="bg-white border-y border-slate-200 py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-12 text-center">Dirancang untuk memudahkan mahasiswa</h2>
+                    
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <!-- Feature 1 -->
+                        <div class="bg-slate-50 border border-slate-200 p-8 rounded-2xl">
+                            <div class="w-12 h-12 bg-white border border-slate-200 text-brand-600 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-sm">
+                                <i class="ph-bold ph-funnel"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Filter Terstruktur</h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                Temukan beasiswa berdasarkan Jurusan, IPK, dan Semester. Tidak perlu memilah puluhan informasi yang tidak relevan secara manual.
+                            </p>
+                        </div>
+                        
+                        <!-- Feature 2 -->
+                        <div class="bg-slate-50 border border-slate-200 p-8 rounded-2xl">
+                            <div class="w-12 h-12 bg-white border border-slate-200 text-brand-600 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-sm">
+                                <i class="ph-bold ph-clock"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Pengingat Otomatis</h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                Simpan beasiswa incaranmu dan dapatkan notifikasi email otomatis sebelum tenggat waktu pendaftaran berakhir.
+                            </p>
+                        </div>
+
+                        <!-- Feature 3 -->
+                        <div class="bg-slate-50 border border-slate-200 p-8 rounded-2xl">
+                            <div class="w-12 h-12 bg-white border border-slate-200 text-brand-600 rounded-xl flex items-center justify-center text-2xl mb-6 shadow-sm">
+                                <i class="ph-bold ph-kanban"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3">Pelacakan Status</h3>
+                            <p class="text-slate-600 leading-relaxed">
+                                Catat dan pantau secara manual seluruh riwayat pendaftaranmu. Mulai dari berkas masuk hingga pengumuman akhir.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= SEARCH PAGE ================= -->
+        <section id="search" class="page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row gap-8">
+                
+                <!-- Sidebar Filter -->
+                <aside class="md:w-1/4">
+                    <div class="bg-white border border-slate-200 p-6 rounded-2xl sticky top-24">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-bold text-slate-900 flex items-center gap-2">
+                                <i class="ph-bold ph-faders text-brand-600"></i> Filter Beasiswa
+                            </h3>
+                            <button class="text-xs text-slate-500 hover:text-brand-600 font-semibold">Reset</button>
+                        </div>
+                        
+                        <!-- Form Filter sesuai ERD -->
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Kategori</label>
+                                <select class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-sm">
+                                    <option>Semua Kategori</option>
+                                    <option>Akademik / Prestasi</option>
+                                    <option>Bantuan Biaya / Ekonomi</option>
+                                    <option>Penelitian</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Jurusan</label>
+                                <input type="text" placeholder="Cth: Teknik Informatika" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-sm">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Semester Aktif</label>
+                                <select class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-brand-500 outline-none text-sm">
+                                    <option>Pilih Semester</option>
+                                    <option>Semester 1-2</option>
+                                    <option>Semester 3-4</option>
+                                    <option>Semester 5-6</option>
+                                    <option>Semester 7-8</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">IPK Minimal</label>
+                                <input type="number" step="0.01" min="0" max="4" placeholder="Cth: 3.50" class="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-brand-500 outline-none text-sm">
+                            </div>
+
+                            <button class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg font-bold text-sm transition-colors">
+                                Terapkan Filter
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Search Results -->
+                <div class="md:w-3/4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Hasil Pencarian</h2>
+                            <p class="text-sm text-slate-500 mt-1">Menampilkan 12 beasiswa aktif</p>
+                        </div>
+                        <div class="relative w-full sm:w-72">
+                            <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input type="text" placeholder="Cari nama atau institusi..." class="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4">
+                        <!-- Scholarship Card 1 -->
+                        <div class="card-clean p-6 flex flex-col sm:flex-row gap-6 items-start">
+                            <div class="w-16 h-16 bg-brand-50 rounded-xl flex items-center justify-center text-3xl text-brand-600 shrink-0 border border-brand-100">
+                                <i class="ph-fill ph-bank"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex flex-wrap justify-between items-start mb-2 gap-2">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-2.5 py-1 rounded-md">Akademik</span>
+                                    <span class="text-sm font-medium text-amber-600 bg-amber-50 px-3 py-1 rounded-full flex items-center gap-1">
+                                        <i class="ph-bold ph-clock"></i> Tutup 25 Jun 2026
+                                    </span>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900 mb-1">Beasiswa Unggulan Prestasi Kampus</h3>
+                                <p class="text-sm font-medium text-slate-500 mb-3">Kemdikbudristek RI</p>
+                                <p class="text-slate-600 text-sm mb-4 line-clamp-2">
+                                    Diberikan kepada mahasiswa aktif yang memiliki prestasi akademik di tingkat nasional maupun internasional dengan IPK di atas rata-rata.
+                                </p>
+                                <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-600">
+                                    <span class="flex items-center gap-1"><i class="ph-bold ph-student"></i> Min. IPK 3.75</span>
+                                    <span class="flex items-center gap-1"><i class="ph-bold ph-books"></i> Sem 3 s/d 7</span>
+                                </div>
+                            </div>
+                            <div class="flex sm:flex-col gap-3 w-full sm:w-auto mt-4 sm:mt-0">
+                                <!-- User Journey Action: Click Daftar -> URL Eksternal -->
+                                <a href="https://example.com" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-none bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm text-center whitespace-nowrap transition-colors">
+                                    Daftar Eksternal
+                                </a>
+                                <button class="flex-1 sm:flex-none bg-white border border-slate-300 text-slate-700 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
+                                    <i class="ph-bold ph-bookmark-simple"></i> Simpan
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Scholarship Card 2 -->
+                        <div class="card-clean p-6 flex flex-col sm:flex-row gap-6 items-start">
+                            <div class="w-16 h-16 bg-emerald-50 rounded-xl flex items-center justify-center text-3xl text-emerald-600 shrink-0 border border-emerald-100">
+                                <i class="ph-fill ph-hand-coins"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex flex-wrap justify-between items-start mb-2 gap-2">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">Bantuan Biaya</span>
+                                    <span class="text-sm font-medium text-slate-500 flex items-center gap-1">
+                                        <i class="ph-bold ph-clock"></i> Tutup 10 Jul 2026
+                                    </span>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900 mb-1">Beasiswa Sosial Ekonomi STT-NF</h3>
+                                <p class="text-sm font-medium text-slate-500 mb-3">Yayasan Bina Profesi</p>
+                                <p class="text-slate-600 text-sm mb-4 line-clamp-2">
+                                    Program bantuan pembiayaan UKT penuh bagi mahasiswa aktif STT Terpadu Nurul Fikri yang memiliki kendala finansial namun bersemangat studi.
+                                </p>
+                                <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-600">
+                                    <span class="flex items-center gap-1"><i class="ph-bold ph-student"></i> Min. IPK 3.00</span>
+                                    <span class="flex items-center gap-1"><i class="ph-bold ph-books"></i> Sem 1 s/d 8</span>
+                                </div>
+                            </div>
+                            <div class="flex sm:flex-col gap-3 w-full sm:w-auto mt-4 sm:mt-0">
+                                <a href="https://example.com" target="_blank" rel="noopener noreferrer" class="flex-1 sm:flex-none bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-lg font-bold text-sm text-center whitespace-nowrap transition-colors">
+                                    Daftar Eksternal
+                                </a>
+                                <button class="flex-1 sm:flex-none bg-white border border-slate-300 text-slate-700 px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-50 transition-colors flex items-center justify-center gap-2">
+                                    <i class="ph-bold ph-bookmark-simple"></i> Simpan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= DASHBOARD PAGE (Mahasiswa) ================= -->
+        <section id="dashboard" class="page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">Halo, Jibril Ibrahim</h2>
+                    <p class="text-slate-600 mt-1">Sistem Informasi • Semester 4 • IPK: 3.85</p>
+                </div>
+                <!-- Manual Tracking Call-to-Action -->
+                <button class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2 transition-colors">
+                    <i class="ph-bold ph-plus"></i> Catat Pendaftaran Manual
+                </button>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm">
+                    <p class="text-slate-500 font-semibold text-xs mb-1 uppercase tracking-wide">Total Pengajuan</p>
+                    <h3 class="text-3xl font-black text-slate-900">4</h3>
+                </div>
+                <div class="bg-white border border-slate-200 p-5 rounded-xl shadow-sm">
+                    <p class="text-slate-500 font-semibold text-xs mb-1 uppercase tracking-wide">Menunggu</p>
+                    <h3 class="text-3xl font-black text-slate-600">1</h3>
+                </div>
+                <div class="bg-white border border-amber-200 p-5 rounded-xl shadow-sm bg-amber-50">
+                    <p class="text-amber-700 font-semibold text-xs mb-1 uppercase tracking-wide">Sedang Proses</p>
+                    <h3 class="text-3xl font-black text-amber-600">1</h3>
+                </div>
+                <div class="bg-white border border-emerald-200 p-5 rounded-xl shadow-sm bg-emerald-50">
+                    <p class="text-emerald-700 font-semibold text-xs mb-1 uppercase tracking-wide">Diterima</p>
+                    <h3 class="text-3xl font-black text-emerald-600">1</h3>
+                </div>
+            </div>
+
+            <!-- Tracking Table -->
+            <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                    <h3 class="font-bold text-slate-900">Riwayat Pelacakan Status</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-white border-b border-slate-200 text-slate-500">
+                            <tr>
+                                <th class="px-6 py-3 font-semibold">Nama Beasiswa</th>
+                                <th class="px-6 py-3 font-semibold">Tgl Daftar (Manual)</th>
+                                <th class="px-6 py-3 font-semibold">Status Saat Ini</th>
+                                <th class="px-6 py-3 font-semibold text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <!-- Sesuai dengan enum database: pending, processing, accepted, rejected -->
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-slate-900">Beasiswa Unggulan Prestasi</p>
+                                    <p class="text-slate-500 text-xs mt-0.5">Kemdikbudristek RI</p>
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">12 Mei 2026</td>
+                                <td class="px-6 py-4">
+                                    <span class="badge badge-processing">
+                                        <i class="ph-bold ph-spinner-gap"></i> Sedang Diproses
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-brand-600 font-semibold hover:underline text-sm">Ubah Status</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-slate-900">Beasiswa Sosial Ekonomi STT-NF</p>
+                                    <p class="text-slate-500 text-xs mt-0.5">Yayasan Bina Profesi</p>
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">01 Mei 2026</td>
+                                <td class="px-6 py-4">
+                                    <span class="badge badge-accepted">
+                                        <i class="ph-bold ph-check-circle"></i> Diterima
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-brand-600 font-semibold hover:underline text-sm">Lihat Catatan</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-slate-900">Program Pertukaran Kampus Merdeka</p>
+                                    <p class="text-slate-500 text-xs mt-0.5">LPDP</p>
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">20 Apr 2026</td>
+                                <td class="px-6 py-4">
+                                    <span class="badge badge-rejected">
+                                        <i class="ph-bold ph-x-circle"></i> Ditolak
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-brand-600 font-semibold hover:underline text-sm">Lihat Catatan</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-slate-900">Bantuan Riset Tugas Akhir</p>
+                                    <p class="text-slate-500 text-xs mt-0.5">BRIN</p>
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">05 Jun 2026</td>
+                                <td class="px-6 py-4">
+                                    <span class="badge badge-pending">
+                                        <i class="ph-bold ph-hourglass-high"></i> Menunggu
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-brand-600 font-semibold hover:underline text-sm">Ubah Status</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ================= ADMIN PANEL PAGE ================= -->
+        <section id="admin" class="page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Admin Sidebar -->
+                <aside class="md:w-1/4">
+                    <div class="bg-white border border-slate-200 py-4 rounded-xl sticky top-24">
+                        <div class="px-6 mb-4 text-xs font-bold uppercase tracking-widest text-slate-400">Database Utama</div>
+                        <nav class="space-y-1">
+                            <a href="#" class="flex items-center gap-3 px-6 py-2.5 bg-brand-50 text-brand-700 font-semibold border-r-2 border-brand-600">
+                                <i class="ph-bold ph-database"></i> Daftar Beasiswa
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-6 py-2.5 text-slate-600 hover:bg-slate-50 transition-colors font-medium">
+                                <i class="ph-bold ph-users"></i> Data Mahasiswa
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-6 py-2.5 text-slate-600 hover:bg-slate-50 transition-colors font-medium">
+                                <i class="ph-bold ph-tag"></i> Kelola Kategori
+                            </a>
+                        </nav>
+                        
+                        <div class="mt-8 px-6 mb-4 text-xs font-bold uppercase tracking-widest text-slate-400">Pengaturan</div>
+                        <nav class="space-y-1">
+                            <a href="#" class="flex items-center gap-3 px-6 py-2.5 text-slate-600 hover:bg-slate-50 transition-colors font-medium">
+                                <i class="ph-bold ph-gear"></i> Konfigurasi Sistem
+                            </a>
+                        </nav>
+                    </div>
+                </aside>
+
+                <!-- Admin Main Content (Data Beasiswa) -->
+                <div class="md:w-3/4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-slate-900">Manajemen Beasiswa</h2>
+                        <button class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2 transition-colors">
+                            <i class="ph-bold ph-plus"></i> Tambah Data Baru
+                        </button>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500">
+                                <tr>
+                                    <th class="px-6 py-3 font-semibold">Beasiswa & Provider</th>
+                                    <th class="px-6 py-3 font-semibold">Tenggat Waktu</th>
+                                    <th class="px-6 py-3 font-semibold">Status DB</th>
+                                    <th class="px-6 py-3 font-semibold text-right">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-6 py-4">
+                                        <p class="font-bold text-slate-900">Beasiswa Unggulan Prestasi</p>
+                                        <p class="text-slate-500 text-xs mt-0.5">Kemdikbudristek RI</p>
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600">25 Jun 2026</td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-green-100 text-green-700">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-600"></span> Aktif
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button class="w-8 h-8 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors">
+                                                <i class="ph-bold ph-pencil-simple"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-md bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center transition-colors">
+                                                <i class="ph-bold ph-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 opacity-60">
+                                    <td class="px-6 py-4">
+                                        <p class="font-bold text-slate-900">Beasiswa Alumni IT 2025</p>
+                                        <p class="text-slate-500 text-xs mt-0.5">Yayasan Alumni</p>
+                                    </td>
+                                    <td class="px-6 py-4 text-slate-600">01 Jan 2026</td>
+                                    <td class="px-6 py-4">
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold bg-slate-200 text-slate-600">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Inactive
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button class="w-8 h-8 rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-colors">
+                                                <i class="ph-bold ph-pencil-simple"></i>
+                                            </button>
+                                            <button class="w-8 h-8 rounded-md bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center transition-colors">
+                                                <i class="ph-bold ph-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 py-10 bg-white mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-slate-900 rounded flex items-center justify-center text-white">
+                    <i class="ph-bold ph-graduation-cap text-xs"></i>
+                </div>
+                <span class="font-bold text-slate-900 tracking-tight">Portal Beasiswa</span>
+            </div>
+            <div class="flex gap-6 text-sm font-medium text-slate-500">
+                <a href="#" class="hover:text-brand-600 transition-colors">Kebijakan Privasi</a>
+                <a href="#" class="hover:text-brand-600 transition-colors">Syarat & Ketentuan</a>
+                <a href="#" class="hover:text-brand-600 transition-colors">Pusat Bantuan</a>
+            </div>
+            <div class="text-sm text-slate-400">
+                &copy; 2026 Bubur Sum-Scrum Team. MVP Version.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show target page
+            document.getElementById(pageId).classList.add('active');
+
+            // Update navigation active state
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('nav-active');
+                if(link.getAttribute('data-nav') === pageId) {
+                    link.classList.add('nav-active');
+                }
+            });
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

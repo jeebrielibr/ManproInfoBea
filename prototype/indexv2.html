@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BeasiswaHub — Portal Informasi Beasiswa Terpusat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Design tokens ── */
+    :root {
+      --accent: #0ea5e9;
+      --accent-dark: #0284c7;
+      --accent-glow: rgba(14,165,233,.18);
+      --ink: #0c1117;
+      --ink-2: #1e293b;
+      --muted: #64748b;
+      --muted-light: #94a3b8;
+      --surface: #f8fafc;
+      --surface-2: #f1f5f9;
+      --border: #e2e8f0;
+      --white: #ffffff;
+      --radius: 14px;
+      --radius-sm: 8px;
+      --radius-pill: 999px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.04);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.04);
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--white);
+      color: var(--ink);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: .55rem;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; }
+    .nav-logo-text {
+      font-size: 1.05rem; font-weight: 700; color: var(--ink);
+      letter-spacing: -.02em;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: .9rem; font-weight: 500; color: var(--muted);
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta {
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .btn { display: inline-flex; align-items: center; gap: .45rem; border: none; cursor: pointer; font-family: inherit; font-weight: 600; transition: all .18s cubic-bezier(.4,0,.2,1); text-decoration: none; }
+    .btn-ghost {
+      background: none; color: var(--muted); padding: .45rem .9rem;
+      border-radius: var(--radius-pill); font-size: .875rem;
+    }
+    .btn-ghost:hover { color: var(--ink); background: var(--surface-2); }
+    .btn-primary {
+      background: var(--accent); color: var(--white);
+      padding: .5rem 1.1rem; border-radius: var(--radius-pill);
+      font-size: .875rem; box-shadow: 0 1px 4px rgba(14,165,233,.35);
+    }
+    .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(14,165,233,.38); }
+    .btn-primary:active { transform: translateY(0) scale(.98); }
+    .btn-outline {
+      background: none; color: var(--ink);
+      border: 1.5px solid var(--border); padding: .6rem 1.3rem;
+      border-radius: var(--radius-pill); font-size: .9rem;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100dvh;
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 100px 2rem 4rem;
+    }
+    .hero-left { padding-right: 4rem; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .45rem;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: var(--radius-pill); padding: .35rem .9rem;
+      font-size: .78rem; font-weight: 600; color: var(--muted);
+      letter-spacing: .04em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .hero-title {
+      font-size: clamp(2.6rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -.04em;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+    }
+    .hero-title span { color: var(--accent); }
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 52ch;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .hero-actions { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; }
+    .hero-stats {
+      display: flex; gap: 2rem; margin-top: 2.5rem;
+      padding-top: 2rem; border-top: 1px solid var(--border);
+    }
+    .stat-item {}
+    .stat-num {
+      font-size: 1.6rem; font-weight: 800; letter-spacing: -.04em;
+      color: var(--ink); display: block;
+    }
+    .stat-label { font-size: .8rem; color: var(--muted); font-weight: 500; }
+
+    /* Hero right: mockup */
+    .hero-right { position: relative; }
+    .hero-card-stack { position: relative; }
+    .hero-main-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-lg);
+    }
+    .hmc-header { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; }
+    .hmc-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .hmc-icon svg { width: 20px; height: 20px; }
+    .hmc-title { font-weight: 700; font-size: .95rem; color: var(--ink); }
+    .hmc-provider { font-size: .8rem; color: var(--muted); }
+    .hmc-tags { display: flex; gap: .45rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .tag {
+      display: inline-flex; align-items: center; gap: .3rem;
+      padding: .25rem .65rem; border-radius: var(--radius-pill);
+      font-size: .73rem; font-weight: 600;
+    }
+    .tag-blue { background: rgba(14,165,233,.1); color: #0284c7; }
+    .tag-green { background: rgba(34,197,94,.1); color: #16a34a; }
+    .tag-orange { background: rgba(249,115,22,.1); color: #c2410c; }
+    .tag-purple { background: rgba(168,85,247,.1); color: #7c3aed; }
+    .hmc-deadline {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface); border-radius: var(--radius-sm);
+      padding: .65rem .85rem;
+    }
+    .hmc-deadline-label { font-size: .75rem; color: var(--muted); font-weight: 500; }
+    .hmc-deadline-val { font-size: .85rem; font-weight: 700; color: var(--ink); }
+    .deadline-urgent { color: #dc2626; }
+    .hmc-footer { display: flex; gap: .6rem; margin-top: 1rem; }
+    .btn-sm-primary {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      background: var(--accent); color: white; border: none;
+      border-radius: var(--radius-pill); padding: .55rem; font-size: .8rem;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: all .18s;
+    }
+    .btn-sm-primary:hover { background: var(--accent-dark); }
+    .btn-sm-outline {
+      display: flex; align-items: center; justify-content: center;
+      background: none; color: var(--muted); border: 1.5px solid var(--border);
+      border-radius: var(--radius-pill); padding: .55rem .8rem; font-size: .8rem;
+      font-weight: 600; cursor: pointer; font-family: inherit;
+      transition: all .18s; gap: .3rem;
+    }
+    .btn-sm-outline:hover { border-color: var(--accent); color: var(--accent); }
+    /* floating mini cards */
+    .float-card {
+      position: absolute;
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: .75rem 1rem;
+      box-shadow: var(--shadow-md);
+      animation: float 4s ease-in-out infinite;
+    }
+    .float-card-1 { top: -28px; right: -24px; animation-delay: 0s; }
+    .float-card-2 { bottom: -20px; left: -24px; animation-delay: -2s; }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .fc-label { font-size: .7rem; color: var(--muted); font-weight: 500; }
+    .fc-val { font-size: .95rem; font-weight: 800; color: var(--ink); letter-spacing: -.03em; }
+    .fc-sub { font-size: .7rem; color: var(--accent); font-weight: 600; }
+
+    /* ── SECTION WRAPPER ── */
+    .section { padding: 6rem 2rem; }
+    .container { max-width: 1280px; margin: 0 auto; }
+    .section-label {
+      display: inline-flex; align-items: center; gap: .45rem;
+      font-family: var(--mono); font-size: .72rem;
+      color: var(--accent); letter-spacing: .1em; text-transform: uppercase;
+      font-weight: 500; margin-bottom: .75rem;
+    }
+    .section-label::before { content: '//'; opacity: .5; }
+    .section-heading {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800; letter-spacing: -.04em;
+      color: var(--ink); line-height: 1.15;
+    }
+    .section-sub {
+      font-size: 1.05rem; color: var(--muted);
+      max-width: 56ch; line-height: 1.7; margin-top: .75rem;
+    }
+
+    /* ── FEATURES ── */
+    .features-bg { background: var(--surface); }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: all .22s cubic-bezier(.4,0,.2,1);
+    }
+    .feature-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      border-color: rgba(14,165,233,.25);
+    }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.1rem;
+    }
+    .fi-blue { background: rgba(14,165,233,.12); color: var(--accent); }
+    .fi-green { background: rgba(34,197,94,.12); color: #16a34a; }
+    .fi-orange { background: rgba(249,115,22,.12); color: #ea580c; }
+    .fi-purple { background: rgba(168,85,247,.12); color: #7c3aed; }
+    .fi-pink { background: rgba(236,72,153,.12); color: #db2777; }
+    .feature-icon svg { width: 22px; height: 22px; }
+    .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: .5rem; color: var(--ink); }
+    .feature-desc { font-size: .875rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── SEARCH SECTION ── */
+    .search-section { background: var(--white); }
+    .search-bar-wrap {
+      margin-top: 2.5rem;
+      display: flex; gap: .75rem;
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: .45rem .45rem .45rem 1.25rem;
+      max-width: 720px;
+      transition: border-color .2s;
+      box-shadow: var(--shadow-sm);
+    }
+    .search-bar-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .search-input {
+      flex: 1; border: none; outline: none; background: none;
+      font-family: inherit; font-size: .95rem; color: var(--ink);
+    }
+    .search-input::placeholder { color: var(--muted-light); }
+    .search-btn {
+      background: var(--accent); color: white; border: none;
+      border-radius: var(--radius-pill); padding: .6rem 1.4rem;
+      font-family: inherit; font-size: .875rem; font-weight: 600;
+      cursor: pointer; transition: all .18s; white-space: nowrap;
+    }
+    .search-btn:hover { background: var(--accent-dark); }
+    .filter-chips {
+      display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1rem;
+    }
+    .chip {
+      display: inline-flex; align-items: center; gap: .35rem;
+      padding: .35rem .85rem; border-radius: var(--radius-pill);
+      font-size: .8rem; font-weight: 500; cursor: pointer;
+      border: 1.5px solid var(--border); background: var(--white);
+      color: var(--muted); transition: all .18s;
+    }
+    .chip:hover, .chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+    .chip.active { font-weight: 600; }
+    /* scholarship cards grid */
+    .scholarships-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .s-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      transition: all .22s cubic-bezier(.4,0,.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .s-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: rgba(14,165,233,.2); }
+    .s-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .s-card.cat-prestasi::before { background: var(--accent); }
+    .s-card.cat-bantuan::before { background: #16a34a; }
+    .s-card.cat-luar::before { background: #7c3aed; }
+    .s-card.cat-riset::before { background: #ea580c; }
+    .s-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; margin-bottom: .85rem; }
+    .s-card-icon { width: 38px; height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.1rem; }
+    .s-card-bookmark { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .18s; flex-shrink: 0; }
+    .s-card-bookmark:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+    .s-card-bookmark svg { width: 14px; height: 14px; }
+    .s-card-title { font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: .3rem; line-height: 1.35; }
+    .s-card-provider { font-size: .8rem; color: var(--muted); margin-bottom: .85rem; }
+    .s-card-meta { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: .9rem; }
+    .s-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: .9rem; border-top: 1px solid var(--border);
+    }
+    .deadline-badge {
+      display: flex; align-items: center; gap: .35rem;
+      font-size: .75rem; font-weight: 600; color: var(--muted);
+    }
+    .deadline-badge svg { width: 13px; height: 13px; }
+    .deadline-badge.urgent { color: #dc2626; }
+
+    /* ── DASHBOARD PREVIEW ── */
+    .dashboard-section { background: var(--ink); }
+    .dashboard-inner {
+      display: grid; grid-template-columns: 1fr 1.3fr; gap: 4rem; align-items: center;
+    }
+    .dashboard-text .section-label { color: #38bdf8; }
+    .dashboard-text .section-heading { color: var(--white); }
+    .dashboard-text .section-sub { color: #94a3b8; }
+    .dashboard-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.1rem; }
+    .df-item { display: flex; align-items: center; gap: .9rem; }
+    .df-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .df-label { font-size: .9rem; color: #cbd5e1; font-weight: 500; }
+    /* mini dashboard mockup */
+    .dash-mockup {
+      background: #1e293b; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.08);
+      overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,.4);
+    }
+    .dash-header {
+      background: #0f172a; padding: 1rem 1.25rem;
+      display: flex; align-items: center; gap: .6rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dash-dot-red { background: #ef4444; }
+    .dash-dot-yellow { background: #eab308; }
+    .dash-dot-green { background: #22c55e; }
+    .dash-title { font-size: .8rem; color: #64748b; margin-left: auto; font-family: var(--mono); }
+    .dash-body { padding: 1.25rem; }
+    .dash-greeting { font-size: .85rem; color: #94a3b8; margin-bottom: 1rem; }
+    .dash-greeting strong { color: white; }
+    .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin-bottom: 1.25rem; }
+    .ds-item { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.06); border-radius: 10px; padding: .75rem; }
+    .ds-num { font-size: 1.3rem; font-weight: 800; color: white; letter-spacing: -.04em; display: block; }
+    .ds-label { font-size: .65rem; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; }
+    .dash-list-title { font-size: .75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .65rem; font-family: var(--mono); }
+    .dash-track-item {
+      display: flex; align-items: center; gap: .75rem;
+      background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.05);
+      border-radius: 9px; padding: .7rem .85rem; margin-bottom: .5rem;
+    }
+    .dti-name { flex: 1; font-size: .8rem; color: #e2e8f0; font-weight: 500; }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: .3rem;
+      padding: .22rem .65rem; border-radius: var(--radius-pill);
+      font-size: .68rem; font-weight: 700;
+    }
+    .sp-pending { background: rgba(234,179,8,.15); color: #ca8a04; }
+    .sp-processing { background: rgba(14,165,233,.15); color: #0284c7; }
+    .sp-accepted { background: rgba(34,197,94,.15); color: #16a34a; }
+    .sp-rejected { background: rgba(239,68,68,.15); color: #dc2626; }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .sd-yellow { background: #eab308; }
+    .sd-blue { background: var(--accent); }
+    .sd-green { background: #22c55e; }
+    .sd-red { background: #ef4444; }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { background: var(--surface); }
+    .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; margin-top: 3rem; }
+    .step-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem 1.5rem;
+      position: relative; text-align: left;
+    }
+    .step-num {
+      font-family: var(--mono); font-size: .72rem; font-weight: 500;
+      color: var(--accent); letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .step-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+    .step-title { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; }
+    .step-desc { font-size: .875rem; color: var(--muted); line-height: 1.65; }
+    .step-connector { display: none; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink-2); padding: 3rem 2rem;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .footer-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-logo { color: white; font-size: 1rem; font-weight: 700; letter-spacing: -.02em; }
+    .footer-copy { font-size: .8rem; color: #64748b; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: .8rem; color: #64748b; text-decoration: none; transition: color .2s; }
+    .footer-links a:hover { color: #94a3b8; }
+
+    /* ── NOTIFICATION BELL ── */
+    .notif-preview {
+      position: absolute; top: -40px; right: 10px;
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: .9rem 1rem;
+      box-shadow: var(--shadow-md); min-width: 220px;
+      animation: float 4s ease-in-out infinite;
+      animation-delay: -1s;
+    }
+    .np-header { display: flex; align-items: center; gap: .5rem; margin-bottom: .5rem; }
+    .np-dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; }
+    .np-title { font-size: .78rem; font-weight: 700; color: var(--ink); }
+    .np-msg { font-size: .73rem; color: var(--muted); line-height: 1.5; }
+    .np-time { font-size: .68rem; color: var(--muted-light); margin-top: .35rem; font-family: var(--mono); }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding: 100px 1.5rem 4rem; }
+      .hero-left { padding-right: 0; }
+      .hero-right { display: none; }
+      .hero-stats { gap: 1.5rem; }
+      .dashboard-inner { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 640px) {
+      .section { padding: 4rem 1.25rem; }
+      .hero { padding: 90px 1.25rem 3rem; }
+      .features-grid { grid-template-columns: 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">BeasiswaHub</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#fitur">Fitur</a></li>
+      <li><a href="#beasiswa">Beasiswa</a></li>
+      <li><a href="#alur">Cara Kerja</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-ghost">Masuk</a>
+      <a href="#" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        Daftar Gratis
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Portal Beasiswa Terpusat v1.0
+    </div>
+    <h1 class="hero-title">
+      Semua Beasiswa,<br>
+      <span>Satu Platform.</span>
+    </h1>
+    <p class="hero-desc">
+      Temukan, simpan, dan lacak progres pendaftaran beasiswa dari berbagai sumber dalam satu sistem yang terstruktur. Filter sesuai IPK, jurusan, dan semester kamu.
+    </p>
+    <div class="hero-actions">
+      <a href="#beasiswa" class="btn btn-primary" style="padding: .7rem 1.6rem; font-size: .95rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Cari Beasiswa
+      </a>
+      <a href="#dashboard" class="btn btn-outline">Lihat Dashboard →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">120+</span>
+        <span class="stat-label">Beasiswa Tersedia</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">8</span>
+        <span class="stat-label">Kategori</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4.8★</span>
+        <span class="stat-label">Rating Pengguna</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO RIGHT: floating card mockup -->
+  <div class="hero-right">
+    <!-- notification float -->
+    <div class="notif-preview" style="position:absolute; top: 0; right: -20px; min-width:210px;">
+      <div class="np-header">
+        <div class="np-dot"></div>
+        <span class="np-title">Pengingat Deadline</span>
+      </div>
+      <p class="np-msg">Beasiswa Bank Indonesia tutup dalam <strong>3 hari lagi!</strong></p>
+      <p class="np-time">● just now</p>
+    </div>
+
+    <div class="hero-card-stack" style="margin-top: 52px;">
+      <!-- Main scholarship card -->
+      <div class="hero-main-card">
+        <div class="hmc-header">
+          <div class="hmc-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <div class="hmc-title">Beasiswa Unggulan Kemendikbud</div>
+            <div class="hmc-provider">Kementerian Pendidikan dan Kebudayaan RI</div>
+          </div>
+        </div>
+        <div class="hmc-tags">
+          <span class="tag tag-blue">Prestasi</span>
+          <span class="tag tag-green">IPK ≥ 3.5</span>
+          <span class="tag tag-orange">Sem. 3–8</span>
+          <span class="tag tag-purple">S1</span>
+        </div>
+        <div class="hmc-deadline">
+          <span class="hmc-deadline-label">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;margin-right:.3rem"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Deadline Pendaftaran
+          </span>
+          <span class="hmc-deadline-val deadline-urgent">30 Juni 2026 · 7 hari lagi</span>
+        </div>
+        <div class="hmc-footer">
+          <button class="btn-sm-primary">Daftar Sekarang →</button>
+          <button class="btn-sm-outline">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            Simpan
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom float: match score -->
+      <div class="float-card float-card-2" style="position: absolute; bottom: -26px; left: -24px;">
+        <div class="fc-label">Profil Match</div>
+        <div class="fc-val">94%</div>
+        <div class="fc-sub">↑ Sangat Sesuai</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section features-bg" id="fitur">
+  <div class="container">
+    <div class="section-label">Fitur Utama</div>
+    <h2 class="section-heading">Semua yang kamu butuhkan,<br>dalam satu portal</h2>
+    <p class="section-sub">Dirancang khusus untuk mahasiswa yang ingin mengoptimalkan peluang beasiswa tanpa kehabisan waktu mencari informasi.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon fi-blue">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <div class="feature-title">Search & Filter Cerdas</div>
+        <div class="feature-desc">Filter beasiswa berdasarkan IPK, jurusan, semester, dan kategori secara real-time. Hasil yang relevan langsung muncul tanpa perlu reload.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-orange">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="feature-title">Notifikasi & Reminder</div>
+        <div class="feature-desc">Pengingat otomatis via email sebelum deadline beasiswa yang kamu simpan berakhir. Tidak ada lagi peluang yang terlewat.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-green">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feature-title">Tracking Status</div>
+        <div class="feature-desc">Catat dan pantau progres aplikasi beasiswamu — dari Applied, In Progress, hingga Accepted atau Rejected — semuanya dalam satu dashboard.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <div class="feature-title">Dashboard Admin</div>
+        <div class="feature-desc">Admin dapat menambah, mengubah, memverifikasi, dan menghapus data beasiswa dengan format standar yang tervalidasi.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon fi-pink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="feature-title">Profil Mahasiswa</div>
+        <div class="feature-desc">Simpan profil IPK, jurusan, dan semester kamu untuk mendapatkan rekomendasi beasiswa yang paling sesuai secara otomatis.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH / SCHOLARSHIP BROWSE -->
+<section class="section search-section" id="beasiswa">
+  <div class="container">
+    <div class="section-label">Direktori Beasiswa</div>
+    <h2 class="section-heading">Temukan beasiswamu sekarang</h2>
+    <p class="section-sub">Lebih dari 120 beasiswa dari berbagai lembaga, tersedia dan terverifikasi.</p>
+
+    <div class="search-bar-wrap" style="margin-top:2rem;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="search-input" type="text" placeholder="Cari nama beasiswa, lembaga, atau kategori..." />
+      <button class="search-btn">Cari</button>
+    </div>
+
+    <div class="filter-chips">
+      <div class="chip active">Semua</div>
+      <div class="chip">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Prestasi
+      </div>
+      <div class="chip">💰 Bantuan Biaya</div>
+      <div class="chip">🌏 Luar Negeri</div>
+      <div class="chip">🔬 Riset</div>
+      <div class="chip">🏫 Internal Kampus</div>
+      <div class="chip">IPK ≥ 3.0</div>
+      <div class="chip">IPK ≥ 3.5</div>
+    </div>
+
+    <div class="scholarships-grid">
+      <!-- Card 1 -->
+      <div class="s-card cat-prestasi">
+        <div class="s-card-header">
+          <div class="s-card-icon" style="background:rgba(14,165,233,.1); font-size:1.2rem;">🎓</div>
+          <button class="s-card-bookmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+        <div class="s-card-title">Beasiswa Unggulan Kemendikbud</div>
+        <div class="s-card-provider">Kementerian Pendidikan RI</div>
+        <div class="s-card-meta">
+          <span class="tag tag-blue">Prestasi</span>
+          <span class="tag tag-green">IPK ≥ 3.5</span>
+          <span class="tag tag-orange">Sem. 3–8</span>
+        </div>
+        <div class="s-card-footer">
+          <div class="deadline-badge urgent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            30 Juni 2026
+          </div>
+          <a href="#" class="btn btn-primary" style="padding:.38rem .9rem; font-size:.78rem;">Daftar →</a>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="s-card cat-bantuan">
+        <div class="s-card-header">
+          <div class="s-card-icon" style="background:rgba(34,197,94,.1); font-size:1.2rem;">🏦</div>
+          <button class="s-card-bookmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+        <div class="s-card-title">Beasiswa Bank Indonesia</div>
+        <div class="s-card-provider">Bank Indonesia</div>
+        <div class="s-card-meta">
+          <span class="tag tag-green">Bantuan Biaya</span>
+          <span class="tag tag-green">IPK ≥ 3.0</span>
+          <span class="tag tag-orange">Sem. 5–7</span>
+        </div>
+        <div class="s-card-footer">
+          <div class="deadline-badge urgent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            3 Juli 2026
+          </div>
+          <a href="#" class="btn btn-primary" style="padding:.38rem .9rem; font-size:.78rem;">Daftar →</a>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="s-card cat-luar">
+        <div class="s-card-header">
+          <div class="s-card-icon" style="background:rgba(168,85,247,.1); font-size:1.2rem;">🌏</div>
+          <button class="s-card-bookmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+        <div class="s-card-title">LPDP Program Reguler</div>
+        <div class="s-card-provider">Lembaga Pengelola Dana Pendidikan</div>
+        <div class="s-card-meta">
+          <span class="tag tag-purple">Luar Negeri</span>
+          <span class="tag tag-green">IPK ≥ 3.0</span>
+          <span class="tag tag-blue">S2/S3</span>
+        </div>
+        <div class="s-card-footer">
+          <div class="deadline-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            15 Agustus 2026
+          </div>
+          <a href="#" class="btn btn-primary" style="padding:.38rem .9rem; font-size:.78rem;">Daftar →</a>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="s-card cat-riset">
+        <div class="s-card-header">
+          <div class="s-card-icon" style="background:rgba(249,115,22,.1); font-size:1.2rem;">🔬</div>
+          <button class="s-card-bookmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+        <div class="s-card-title">Beasiswa Riset Dikti</div>
+        <div class="s-card-provider">Direktorat Jenderal Dikti</div>
+        <div class="s-card-meta">
+          <span class="tag tag-orange">Riset</span>
+          <span class="tag tag-green">IPK ≥ 3.5</span>
+          <span class="tag tag-orange">Sem. 6–8</span>
+        </div>
+        <div class="s-card-footer">
+          <div class="deadline-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            1 September 2026
+          </div>
+          <a href="#" class="btn btn-primary" style="padding:.38rem .9rem; font-size:.78rem;">Daftar →</a>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="s-card cat-prestasi">
+        <div class="s-card-header">
+          <div class="s-card-icon" style="background:rgba(14,165,233,.1); font-size:1.2rem;">⭐</div>
+          <button class="s-card-bookmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+        <div class="s-card-title">Beasiswa Telkom Indonesia</div>
+        <div class="s-card-provider">PT Telkom Indonesia</div>
+        <div class="s-card-meta">
+          <span class="tag tag-blue">Prestasi</span>
+          <span class="tag tag-green">IPK ≥ 3.25</span>
+          <span class="tag tag-orange">Teknik Informatika</span>
+        </div>
+        <div class="s-card-footer">
+          <div class="deadline-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            20 Juli 2026
+          </div>
+          <a href="#" class="btn btn-primary" style="padding:.38rem .9rem; font-size:.78rem;">Daftar →</a>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="s-card cat-bantuan">
+        <div class="s-card-header">
+          <div class="s-card-icon" style="background:rgba(34,197,94,.1); font-size:1.2rem;">🏫</div>
+          <button class="s-card-bookmark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          </button>
+        </div>
+        <div class="s-card-title">Beasiswa KIP Kuliah</div>
+        <div class="s-card-provider">Pemerintah RI — Kemendikbud</div>
+        <div class="s-card-meta">
+          <span class="tag tag-green">Bantuan Biaya</span>
+          <span class="tag tag-blue">Semua Prodi</span>
+          <span class="tag tag-orange">Sem. 1–8</span>
+        </div>
+        <div class="s-card-footer">
+          <div class="deadline-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            31 Juli 2026
+          </div>
+          <a href="#" class="btn btn-primary" style="padding:.38rem .9rem; font-size:.78rem;">Daftar →</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:2.5rem;">
+      <a href="#" class="btn btn-outline">Lihat Semua Beasiswa (120+) →</a>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<section class="section dashboard-section" id="dashboard">
+  <div class="container">
+    <div class="dashboard-inner">
+      <div class="dashboard-text">
+        <div class="section-label">Dashboard Mahasiswa</div>
+        <h2 class="section-heading">Pantau semua aplikasi dalam satu layar</h2>
+        <p class="section-sub">Tidak perlu ingat-ingat status mana yang sudah dikirim. Catat manual di portal dan statistik kamu selalu up-to-date.</p>
+        <div class="dashboard-features">
+          <div class="df-item"><div class="df-dot"></div><span class="df-label">Ubah status kapan saja: Pending → Accepted / Rejected</span></div>
+          <div class="df-item"><div class="df-dot"></div><span class="df-label">Statistik ringkasan: total apply, diterima, ditolak</span></div>
+          <div class="df-item"><div class="df-dot"></div><span class="df-label">Tambah beasiswa tracking dari dropdown portal</span></div>
+          <div class="df-item"><div class="df-dot"></div><span class="df-label">Notifikasi otomatis ketika deadline mendekat</span></div>
+        </div>
+        <div style="margin-top:2rem;">
+          <a href="#" class="btn btn-primary" style="padding:.7rem 1.5rem; font-size:.9rem;">
+            Buka Dashboard Saya →
+          </a>
+        </div>
+      </div>
+
+      <!-- Mockup -->
+      <div class="dash-mockup">
+        <div class="dash-header">
+          <div class="dash-dot dash-dot-red"></div>
+          <div class="dash-dot dash-dot-yellow"></div>
+          <div class="dash-dot dash-dot-green"></div>
+          <span class="dash-title">beasiswahub.id/dashboard</span>
+        </div>
+        <div class="dash-body">
+          <div class="dash-greeting">Selamat datang, <strong>Jibril Ibrahim</strong> 👋</div>
+          <div class="dash-stats">
+            <div class="ds-item">
+              <span class="ds-num">7</span>
+              <span class="ds-label">Total Apply</span>
+            </div>
+            <div class="ds-item">
+              <span class="ds-num" style="color:#22c55e;">2</span>
+              <span class="ds-label">Diterima</span>
+            </div>
+            <div class="ds-item">
+              <span class="ds-num" style="color:#eab308;">3</span>
+              <span class="ds-label">Proses</span>
+            </div>
+          </div>
+          <div class="dash-list-title">// Riwayat Tracking</div>
+
+          <div class="dash-track-item">
+            <div class="dti-name">Beasiswa Unggulan Kemendikbud</div>
+            <div class="status-pill sp-processing"><div class="status-dot sd-blue"></div>Processing</div>
+          </div>
+          <div class="dash-track-item">
+            <div class="dti-name">Beasiswa Bank Indonesia</div>
+            <div class="status-pill sp-accepted"><div class="status-dot sd-green"></div>Accepted</div>
+          </div>
+          <div class="dash-track-item">
+            <div class="dti-name">LPDP Program Reguler</div>
+            <div class="status-pill sp-pending"><div class="status-dot sd-yellow"></div>Pending</div>
+          </div>
+          <div class="dash-track-item">
+            <div class="dti-name">Beasiswa Telkom Indonesia</div>
+            <div class="status-pill sp-rejected"><div class="status-dot sd-red"></div>Rejected</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how-section" id="alur">
+  <div class="container">
+    <div class="section-label">Cara Kerja</div>
+    <h2 class="section-heading">3 langkah mudah mulai hari ini</h2>
+    <p class="section-sub">Tidak ada proses yang rumit. Cukup daftar, cari, dan lacak semua di satu tempat.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">// 01</div>
+        <div class="step-icon" style="background:rgba(14,165,233,.1); color:var(--accent);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="step-title">Buat Akun & Isi Profil</div>
+        <div class="step-desc">Daftar gratis dan isi data profil: IPK, jurusan, dan semester kamu. Sistem akan otomatis merekomendasikan beasiswa yang sesuai.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">// 02</div>
+        <div class="step-icon" style="background:rgba(34,197,94,.1); color:#16a34a;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <div class="step-title">Cari & Filter Beasiswa</div>
+        <div class="step-desc">Gunakan fitur search dan filter untuk menemukan beasiswa yang paling cocok. Klik tombol "Daftar" untuk langsung ke website penyedia.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">// 03</div>
+        <div class="step-icon" style="background:rgba(168,85,247,.1); color:#7c3aed;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="step-title">Lacak Status Aplikasi</div>
+        <div class="step-desc">Setelah mendaftar di situs eksternal, kembali ke portal dan update status secara manual. Dashboard kamu langsung terperbaharui.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">// 04</div>
+        <div class="step-icon" style="background:rgba(249,115,22,.1); color:#ea580c;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="step-title">Terima Notifikasi Deadline</div>
+        <div class="step-desc">Portal mengirim pengingat otomatis via email ketika deadline beasiswa yang kamu simpan akan segera berakhir. Tidak ada lagi yang terlewat.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section style="background: linear-gradient(135deg, #0c1117 0%, #0f172a 50%, #0c1a2e 100%); padding: 6rem 2rem;">
+  <div style="max-width:1280px; margin:0 auto; text-align:center;">
+    <div style="display:inline-flex; align-items:center; gap:.5rem; background:rgba(14,165,233,.15); border:1px solid rgba(14,165,233,.25); border-radius:999px; padding:.35rem .9rem; font-size:.78rem; font-weight:600; color:#38bdf8; letter-spacing:.04em; text-transform:uppercase; margin-bottom:1.5rem;">
+      <div style="width:6px; height:6px; border-radius:50%; background:#38bdf8;"></div>
+      Mulai Sekarang — Gratis
+    </div>
+    <h2 style="font-size:clamp(2rem,4vw,3.2rem); font-weight:800; letter-spacing:-.04em; color:white; line-height:1.15; margin-bottom:1rem;">
+      Jangan sampai beasiswa impianmu<br>
+      <span style="color:#38bdf8;">terlewat karena informasi</span>
+    </h2>
+    <p style="font-size:1.05rem; color:#94a3b8; max-width:52ch; margin:0 auto 2.5rem; line-height:1.7;">
+      Bergabung dan mulai lacak peluang beasiswamu hari ini. Sudah lebih dari 500 mahasiswa aktif menggunakan BeasiswaHub.
+    </p>
+    <div style="display:flex; gap:.75rem; justify-content:center; flex-wrap:wrap;">
+      <a href="#" class="btn btn-primary" style="padding:.75rem 1.8rem; font-size:1rem; border-radius:999px;">
+        Daftar Akun Gratis →
+      </a>
+      <a href="#beasiswa" class="btn btn-outline" style="padding:.75rem 1.8rem; font-size:1rem; border-radius:999px; color:#94a3b8; border-color:rgba(255,255,255,.15);">
+        Lihat Beasiswa
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">BeasiswaHub</div>
+      <div class="footer-copy" style="margin-top:.4rem;">Portal Informasi Beasiswa Terpusat · Kelompok 2 — Bubur Sum-Scrum</div>
+    </div>
+    <div class="footer-links">
+      <a href="#">Tentang</a>
+      <a href="#">Privasi</a>
+      <a href="#">Kontak</a>
+      <a href="#">GitHub</a>
+    </div>
+    <div class="footer-copy">© 2026 BeasiswaHub. Manajemen Proyek — Teknik Informatika</div>
+  </div>
+</footer>
+
+<script>
+  // chip filter interaction
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
+
+  // bookmark toggle
+  document.querySelectorAll('.s-card-bookmark').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const svg = btn.querySelector('svg path');
+      const isActive = btn.dataset.saved === 'true';
+      if (!isActive) {
+        btn.style.background = 'rgba(14,165,233,.1)';
+        btn.style.borderColor = 'var(--accent)';
+        btn.style.color = 'var(--accent)';
+        btn.dataset.saved = 'true';
+        // animate
+        btn.style.transform = 'scale(0.88)';
+        setTimeout(() => btn.style.transform = '', 150);
+      } else {
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+        btn.dataset.saved = 'false';
+      }
+    });
+  });
+
+  // scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.feature-card, .s-card, .step-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity .4s ease, transform .4s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
