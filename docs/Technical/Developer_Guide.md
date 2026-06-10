@@ -11,8 +11,8 @@ Untuk memastikan konsistensi antar developer, gunakan spesifikasi berikut:
 - **PHP:** 8.2+
 - **Framework:** Laravel 11.x
 - **Database:** MySQL 8.0
-- **Node.js & NPM:** Latest LTS (untuk Vite & Tailwind)
-- **Editor:** VS Code (Disarankan menggunakan ekstensi: Laravel Extension Pack, Tailwind CSS IntelliSense).
+- **Node.js & NPM:** Latest LTS (untuk Vite & Bootstrap 5)
+- **Editor:** VS Code (Disarankan menggunakan ekstensi: Laravel Extension Pack).
 
 ### Langkah Instalasi Lokal:
 1. Clone repository: `git clone [URL_REPO]`

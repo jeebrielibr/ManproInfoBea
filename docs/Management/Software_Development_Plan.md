@@ -32,10 +32,10 @@
 | 2 | 0110224057 | Aurora Zalfa Hartono | Scrum Master |
 | 3 | 0110224170 | Eko Budi Prasetio | Media Creative (UI/UX) |
 | 4 | 0110224199 | Nur Indah | Media Creative (Content) |
-| 5 | 0110224002 | Jibril Ibrahim | Developer (Backend/Deployment/Tracking) |
-| 6 | 0110224019 | Silvia Zahrodiniah | Developer (Search & Filtering) |
-| 7 | 0110224194 | Tri Nurjuliyanti | Developer (Notification & Reminder) |
-| 8 | 0110224055 | Alya Dliya Zahra Andre | Developer (Authentication & Security) |
+| 5 | 0110224002 | Jibril Ibrahim | Developer (Laravel Backend/Tracking) |
+| 6 | 0110224019 | Silvia Zahrodiniah | Developer (Search & Blade Templating) |
+| 7 | 0110224194 | Tri Nurjuliyanti | Developer (Notification & Bootstrap UI) |
+| 8 | 0110224055 | Alya Dliya Zahra Andre | Developer (Auth & Security) |
 
 ---
 
@@ -103,21 +103,21 @@ mindmap
       Wireframe & Prototype UI
       Database Schema (ERD)
       Standarisasi Konten Beasiswa
-    Fase 3: Pengembangan Core Fitur
-      Modul Autentikasi & Keamanan
-      Modul Search & Filter Dinamis
-      Modul Notifikasi & Reminder
-      Modul Tracking Status Mahasiswa
+    Fase 3: Pengembangan Core Fitur (Laravel + Bootstrap 5)
+      Modul Autentikasi (Laravel Session)
+      Blade View: Search & Filter
+      Service: Notifikasi & Reminder
+      Blade View: Tracking & Dashboard
       Dashboard CMS Admin
     Fase 4: Testing & Deployment
       Laporan System Testing
-      Aplikasi Web Ter-deploy
+      Aplikasi Web Ter-deploy (Cloud)
 ```
 
 **Penjelasan Singkat DSC:**
 - **Fase 1 (Inisiasi):** Difokuskan pada finalisasi dokumen manajerial proyek (*Charter, Plan, Timeline*).
-- **Fase 2 (Desain):** Menghasilkan *blueprint* desain antarmuka yang mengedepankan kualitas visual (*Premium UI/UX*), skema basis data, dan struktur konten.
-- **Fase 3 (Pengembangan):** Implementasi kode pada modul-modul sistem utama secara bertahap melalui metode iteratif (*Sprint*).
+- **Fase 2 (Desain):** Menghasilkan *blueprint* desain antarmuka menggunakan Bootstrap 5, skema basis data, dan struktur konten.
+- **Fase 3 (Pengembangan):** Implementasi kode menggunakan Laravel 11 dengan templating Blade secara bertahap melalui metode iteratif (*Sprint*).
 - **Fase 4 (Deployment):** Menjamin sistem diuji (UAT, keamanan) sebelum dirilis di infrastruktur *Cloud Hosting*.
 
 ---
@@ -127,7 +127,7 @@ Berikut adalah *Work Breakdown Structure* yang mendekomposisi seluruh paket peke
 
 ```mermaid
 gantt
-    title Work Breakdown Structure (WBS) - Portal Beasiswa
+    title Work Breakdown Structure (WBS) - Portal Beasiswa (Laravel)
     dateFormat  YYYY-MM-DD
     axisFormat  %W
     
@@ -136,19 +136,19 @@ gantt
     1.2 Workflow Scrum & Timeline (Aurora)        :a2, after a1, 3d
     
     section 2. Desain UI/UX & Data
-    2.1 Desain Wireframe & Prototype (Eko)        :b1, 2026-05-22, 5d
+    2.1 Desain Wireframe & Bootstrap Prototype    :b1, 2026-05-22, 5d
     2.2 Susun & Standarisasi Konten (Nur)         :b2, 2026-05-24, 3d
     
-    section 3. Pengembangan Backend
-    3.1 Infrastruktur Database (Jibril/Alya)      :c1, 2026-05-26, 3d
-    3.2 API & Keamanan Autentikasi (Alya)         :c2, after c1, 4d
-    3.3 API CRUD Beasiswa (Silvia/Jibril)         :c3, after c2, 4d
+    section 3. Pengembangan Inti (Backend)
+    3.1 Infrastruktur Database & Migration        :c1, 2026-05-26, 3d
+    3.2 Logic Autentikasi & Security (Alya)       :c2, after c1, 4d
+    3.3 Controller CRUD Beasiswa (Silvia/Jibril)  :c3, after c2, 4d
     
-    section 4. Pengembangan Frontend
-    4.1 Integrasi Login & Register (Alya)         :d1, 2026-05-29, 3d
-    4.2 Search & Filter Dinamis (Silvia)          :d2, 2026-05-30, 5d
-    4.3 Pelacakan & Dashboard User (Jibril)       :d3, 2026-05-31, 5d
-    4.4 Notifikasi & Reminder (Tri)               :d4, 2026-06-03, 4d
+    section 4. Pengembangan Antarmuka (Blade)
+    4.1 Implementasi Blade Auth (Alya)            :d1, 2026-05-29, 3d
+    4.2 Blade View: Search & Filter (Silvia)      :d2, 2026-05-30, 5d
+    4.3 Blade View: Dashboard & Tracking (Jibril) :d3, 2026-05-31, 5d
+    4.4 Integrasi Bootstrap & Notif (Tri)         :d4, 2026-06-03, 4d
     
     section 5. Testing & Deployment
     5.1 System & Security Testing (Tim)           :e1, 2026-06-06, 3d
@@ -163,21 +163,21 @@ gantt
 - 1.2 Penyusunan *workflow* Scrum, *Daily Coordination*, penentuan *Backlog* & *Sprint Plan* (*Scrum Master*)
 
 **2. Fase Desain & UI/UX (Minggu 1)**
-- 2.1 Desain *Wireframe* & *Prototype* responsif dengan *glassmorphism* & animasi mikro (*Media Creative*)
+- 2.1 Desain *Wireframe* & *Prototype* responsif menggunakan standar Bootstrap 5 (*Media Creative*)
 - 2.2 Agregasi dan standarisasi konten informasi beasiswa (*Media Creative*)
 
-**3. Fase Pengembangan Backend & Basis Data (Minggu 1 - 2)**
-- 3.1 Pembangunan skema database dan keamanan (*Developer*)
-- 3.2 Pembuatan API Autentikasi dengan enkripsi *password* / sesi (*Developer*)
-- 3.3 Pembuatan API untuk fungsi CRUD Beasiswa (*Developer*)
+**3. Fase Pengembangan Logika Bisnis & Database (Minggu 1 - 2)**
+- 3.1 Pembangunan skema database menggunakan Laravel Migrations (*Developer*)
+- 3.2 Implementasi Autentikasi Laravel (Session-based) dan proteksi CSRF (*Developer*)
+- 3.3 Pembuatan Controller dan Model untuk fungsi CRUD Beasiswa (*Developer*)
 
-**4. Fase Pengembangan Frontend & Integrasi Fitur (Minggu 2 - 3)**
-- 4.1 Implementasi dan integrasi halaman Login, Register, dan Profil Pengguna (*Developer*)
-- 4.2 Pengembangan sistem *Search & Filtering* berbasis algoritma pencarian dinamis (*Developer*)
-- 4.3 Pembangunan antarmuka *Dashboard* untuk pelacakan (*Tracking Status*) pendaftaran (*Developer*)
-- 4.4 Integrasi sistem notifikasi dan pengingat *deadline* beasiswa (*Developer*)
+**4. Fase Pengembangan Frontend (Blade & Bootstrap) (Minggu 2 - 3)**
+- 4.1 Implementasi halaman Login, Register, dan Profil menggunakan Blade Templates (*Developer*)
+- 4.2 Pengembangan sistem *Search & Filtering* dinamis dengan integrasi Controller-to-Blade (*Developer*)
+- 4.3 Pembangunan antarmuka *Dashboard* untuk pelacakan (*Tracking Status*) menggunakan komponen Bootstrap 5 (*Developer*)
+- 4.4 Integrasi sistem notifikasi email (Laravel Mail) dan pengingat *deadline* (*Developer*)
 
 **5. Fase Pengujian & Deployment (Minggu 3)**
-- 5.1 Pengujian fungsional sistem, validasi antarmuka, dan proteksi (XSS/SQLi) (*Tim*)
+- 5.1 Pengujian fungsional sistem, validasi antarmuka Bootstrap, dan proteksi (XSS/SQLi) (*Tim*)
 - 5.2 Evaluasi *feedback* dan perbaikan celah/bug sistem (*Tim*)
 - 5.3 *Deployment* akhir aplikasi ke server *Cloud* dan manajemen *domain* (*Developer*)
