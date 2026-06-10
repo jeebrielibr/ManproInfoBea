@@ -39,10 +39,10 @@ Sistem ini bertindak sebagai perantara antara penyedia beasiswa (melalui input a
 - **Admin Kemahasiswaan:** Memperbarui data beasiswa dan memverifikasi aplikasi pendaftar.
 
 ### 2.4 Batasan Desain & Implementasi
-- **Framework:** Laravel 11.x (PHP 8.2+) dengan Blade/Livewire atau Vue.js (Frontend).
+- **Framework:** Laravel 11.x (PHP 8.2+) dengan Blade Templates & Bootstrap 5 (Frontend).
 - **Database:** MySQL 8.0 (Menggunakan Eloquent ORM dengan Soft Deletes & Unique Slugs).
-- **Keamanan:** Laravel Sanctum/Session, Bcrypt, CSRF Protection, dan SQL Injection Prevention.
-- **UI/UX:** Mengikuti standar *Premium Design* (Clean, Responsive, Micro-animations).
+- **Keamanan:** Laravel Session, Bcrypt, CSRF Protection, dan SQL Injection Prevention.
+- **UI/UX:** Mengikuti standar *Premium Design* (Clean, Responsive, Micro-animations) menggunakan Bootstrap 5.
 
 ---
 

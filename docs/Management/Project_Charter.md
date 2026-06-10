@@ -112,9 +112,9 @@ Berdasarkan hasil analisis finansial, proyek ini akan menggunakan pendekatan **p
 
 ### Sumber Daya Teknologi:
 
-- **Frontend:** HTML, CSS, JavaScript (Framework modern)
-- **Backend:** Server-side framework
-- **Database:** Relational Database Management System
+- **Frontend:** Bootstrap 5 (CSS Framework) & Blade Templates
+- **Backend:** Laravel 11 (PHP Framework)
+- **Database:** MySQL 8.0 (Relational Database)
 - **Hosting:** Cloud-based hosting
 - **Version Control:** Git & GitHub
 
