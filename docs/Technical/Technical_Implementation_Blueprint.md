@@ -52,7 +52,7 @@ ManproInfoBea/
 │   └── seeders/                   # Initial Data (Admin & Categories)
 ├── doc/                           # Dokumentasi & Blueprint
 ├── resources/
-│   ├── js/ & css/                 # Vite, Tailwind & Alpine.js
+│   ├── js/ & css/                 # Vite, Bootstrap 5 & Alpine.js
 │   └── views/                     # Blade Templates
 │       ├── admin/                 # Layouts khusus Admin
 │       ├── student/               # Layouts khusus Mahasiswa

@@ -27,4 +27,4 @@ Proyek ini dikembangkan secara mandiri oleh tim **Bubur Sum-Scrum (Kelompok 2)**
 ## Dokumentasi Proyek
 Informasi lebih detail terkait _business plan_, _action plan_, analisis risiko, finansial, dan rancangan organisasi dapat dilihat di dalam dokumen _Project Charter_.
 
-- [Project Charter](./doc/Project_Charter.md)
+- [Project Charter](./docs/Management/Project_Charter.md)

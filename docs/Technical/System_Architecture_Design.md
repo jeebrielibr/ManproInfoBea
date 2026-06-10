@@ -26,7 +26,7 @@ graph TD
 ```
 
 ### 2.1 Deskripsi Layer
-1. **Presentation Layer:** Antarmuka berbasis web menggunakan Blade Templates atau Vue.js yang dikelola oleh Laravel.
+1. **Presentation Layer:** Antarmuka berbasis web menggunakan Blade Templates & Bootstrap 5 yang dikelola oleh Laravel.
 2. **Logic Layer (Application):** Framework Laravel mengelola *routing*, *middleware*, *business logic* (Services), dan *controller*.
 3. **Data Layer:** MySQL sebagai database relasional untuk menyimpan data beasiswa, pengguna, dan riwayat pelacakan.
 
@@ -35,13 +35,13 @@ graph TD
 ## 3. Komponen Sistem
 
 ### 3.1 Frontend (Presentation)
-- **Blade/Livewire:** Digunakan untuk komponen reaktif tanpa perlu memisahkan total backend/frontend (jika menggunakan Livewire).
-- **Tailwind CSS:** Untuk styling UI yang modern dan responsif.
-- **Micro-animations:** Menggunakan Framer Motion atau Alpine.js untuk interaksi UI premium.
+- **Blade Templates:** Engine templating bawaan Laravel untuk menyajikan data ke view.
+- **Bootstrap 5:** Framework CSS utama untuk styling UI yang modern, responsif, dan konsisten.
+- **Micro-animations:** Menggunakan Alpine.js atau Vanilla CSS Animations untuk interaksi UI premium.
 
 ### 3.2 Backend (Logic)
 - **Laravel 11.x (PHP 8.2+):** Inti sistem pengelola logika bisnis.
-- **Sanctum/Session:** Pengelola autentikasi berbasis sesi untuk web dan token untuk API.
+- **Laravel Session:** Pengelola autentikasi berbasis sesi untuk aplikasi web.
 - **Service & Repository Pattern:** Memisahkan logika bisnis untuk mematuhi prinsip SOLID.
 - **Queues/Jobs:** Digunakan untuk pengiriman email notifikasi deadline secara *asynchronous* agar tidak membebani performa user.
 
