@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Task Spinner - Bubur Sum-Scrum</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --accent: #f59e0b;
+            --background: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-size: 2rem;
+        }
+
+        p.subtitle {
+            color: var(--secondary);
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: #e2e8f0;
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--secondary);
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto 30px;
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        .marker {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid var(--accent);
+            z-index: 10;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: white;
+            background-color: var(--primary);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background-color: var(--secondary);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            min-height: 2.25rem;
+            color: var(--success);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        #result.show {
+            opacity: 1;
+        }
+
+        .role {
+            font-size: 1rem;
+            color: var(--secondary);
+            display: block;
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        @media (max-width: 480px) {
+            .wheel-container {
+                width: 300px;
+                height: 300px;
+            }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Team & Task Spinner</h1>
+        <p class="subtitle">Bubur Sum-Scrum - Pembagian Adil</p>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchMode('members')">Anggota Tim</div>
+            <div class="tab" onclick="switchMode('features')">Fitur Proyek</div>
+        </div>
+
+        <div class="wheel-container">
+            <div class="marker"></div>
+            <canvas id="wheel" width="500" height="500"></canvas>
+        </div>
+
+        <div class="controls">
+            <button id="spinBtn">PUTAR SEKARANG!</button>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const members = [
+            { name: "Fachri", sub: "Project Manager" },
+            { name: "Aurora", sub: "Scrum Master" },
+            { name: "Eko", sub: "Media Creative" },
+            { name: "Nur", sub: "Media Creative" },
+            { name: "Jibril", sub: "Developer" },
+            { name: "Silvia", sub: "Developer" },
+            { name: "Tri", sub: "Developer" },
+            { name: "Alya", sub: "Developer" }
+        ];
+
+        const features = [
+            { name: "Sistem Autentikasi", sub: "Login, Register, Security" },
+            { name: "Search & Filtering", sub: "Scholarship Engine" },
+            { name: "Dashboard Admin", sub: "CMS & Monitoring" },
+            { name: "Dashboard MHS", sub: "Tracking & Profile" }
+        ];
+
+        const colors = [
+            "#3b82f6", "#10b981", "#f59e0b", "#ef4444",
+            "#8b5cf6", "#ec4899", "#06b6d4", "#f97316"
+        ];
+
+        let currentMode = 'members';
+        const canvas = document.getElementById("wheel");
+        const ctx = canvas.getContext("2d");
+        const spinBtn = document.getElementById("spinBtn");
+        const resultDiv = document.getElementById("result");
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = canvas.width / 2;
+
+        function drawWheel() {
+            const list = currentMode === 'members' ? members : features;
+            const step = (Math.PI * 2) / list.length;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            list.forEach((item, i) => {
+                const startAngle = i * step;
+                const endAngle = (i + 1) * step;
+
+                // Draw Slice
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                ctx.strokeStyle = "#fff";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Draw Text
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + step / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "white";
+                ctx.font = "bold 18px Inter";
+                
+                // Adjust font size for longer feature names
+                if (currentMode === 'features') ctx.font = "bold 16px Inter";
+                
+                ctx.fillText(item.name, radius - 30, 8);
+                ctx.restore();
+            });
+        }
+
+        let currentRotation = 0;
+
+        function switchMode(mode) {
+            if (spinBtn.disabled) return;
+            currentMode = mode;
+            
+            // Update UI
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Reset wheel
+            currentRotation = 0;
+            canvas.style.transform = `rotate(0deg)`;
+            resultDiv.classList.remove("show");
+            
+            drawWheel();
+        }
+
+        function spin() {
+            spinBtn.disabled = true;
+            resultDiv.classList.remove("show");
+            
+            const list = currentMode === 'members' ? members : features;
+            const extraSpins = 5 + Math.random() * 5;
+            const spinAngle = extraSpins * 360;
+            currentRotation += spinAngle;
+
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                const actualRotation = currentRotation % 360;
+                const sliceAngle = 360 / list.length;
+                const winningAngle = (360 - (actualRotation % 360) + 270) % 360;
+                const winnerIndex = Math.floor(winningAngle / sliceAngle) % list.length;
+                const winner = list[winnerIndex];
+
+                resultDiv.innerHTML = `${winner.name} <span class="role">${winner.sub}</span>`;
+                resultDiv.classList.add("show");
+                spinBtn.disabled = false;
+            }, 4000);
+        }
+
+        drawWheel();
+        spinBtn.addEventListener("click", spin);
+    </script>
+
+</body>
+</html>

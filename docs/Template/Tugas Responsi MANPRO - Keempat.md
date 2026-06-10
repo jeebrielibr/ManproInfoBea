@@ -166,7 +166,7 @@ Buatlah DSC dari proyek kelompok Anda untuk melengkapi *project oriented scope*
 
   ## 3.3 Konstruksi / Pemrograman Fitur (Coding \- Product Scope) 
 
-  **3.3.1 Setup Lingkungan Pengembangan (Environment Setup)** Deskripsi: Menyiapkan repository GitHub, struktur folder proyek, framework yang digunakan (frontend & backend), serta konfigurasi database lokal. Penanggung Jawab: Jibril Ibrahim & Silvia Zahrodiniah (Developer) Durasi: 2 Hari 
+  **3.3.1 Setup Lingkungan Pengembangan (Environment Setup)** Deskripsi: Menyiapkan repository GitHub, struktur folder proyek, framework Laravel 11 (Backend & Blade Templating) serta Bootstrap 5 (Frontend Styling), serta konfigurasi database lokal. Penanggung Jawab: Jibril Ibrahim & Silvia Zahrodiniah (Developer) Durasi: 2 Hari 
 
   **3.3.2 Pengembangan Fitur Autentikasi (Login & Register)** Deskripsi: Membangun sistem login dan registrasi untuk mahasiswa dan admin, termasuk manajemen sesi dan hak akses. Penanggung Jawab: Jibril Ibrahim (Developer) Durasi: 3 Hari 
 
@@ -194,7 +194,8 @@ Buatlah DSC dari proyek kelompok Anda untuk melengkapi *project oriented scope*
 
 **3.4.2 Pengujian Tingkat Rendah (*Unit & Integration Testing*)**
 
-* **Deskripsi:** Melakukan pengujian pada level kode menggunakan pendekatan *Automated Testing Framework* (misalnya: Jest atau PHPUnit). *Unit Testing* difokuskan untuk menguji fungsi/metode spesifik, seperti algoritma validasi format ekstensi file pendaftaran (.pdf maksimal 2MB) dan fungsi kalkulasi tenggat waktu beasiswa. Selanjutnya, *Integration Testing* dilakukan dengan metode *Top-Down* untuk memastikan modul antarmuka pengguna dapat melakukan *query* data ke database PostgreSQL/MySQL dan memanggil API eksternal tanpa terjadi diskoneksi atau kebocoran data (*data leak*).  
+* **Deskripsi:** Melakukan pengujian pada level kode menggunakan pendekatan *Automated Testing Framework* (misalnya: PHPUnit). *Unit Testing* difokuskan untuk menguji fungsi/metode spesifik, seperti algoritma validasi format pendaftaran dan fungsi kalkulasi tenggat waktu beasiswa. Selanjutnya, *Integration Testing* dilakukan dengan metode *Top-Down* untuk memastikan modul antarmuka pengguna dapat melakukan *query* data ke database MySQL 8.0 dan memanggil API eksternal tanpa terjadi diskoneksi atau kebocoran data (*data leak*).
+  
 * **Metrik Keberhasilan:** Cakupan kode (*Code Coverage*) minimal mencapai 85% tanpa ada *fatal error* pada interkoneksi database.  
 * **Penanggung Jawab:** Tri Nurjulyanti & Alya Dliya Zahra Andre (Developer).  
 * **Durasi: 4 Hari.**  
