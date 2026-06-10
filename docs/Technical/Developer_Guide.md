@@ -16,7 +16,7 @@ Untuk memastikan konsistensi antar developer, gunakan spesifikasi berikut:
 
 ### Langkah Instalasi Lokal:
 1. Clone repository: `git clone [URL_REPO]`
-2. Install dependencies: `composer install` & `npm install`
+2. Install dependencies: `composer install`
 3. Copy environment: `cp .env.example .env`
 4. Generate key: `php artisan key:generate`
 5. Migrasi database: `php artisan migrate --seed`
